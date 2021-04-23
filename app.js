@@ -1,11 +1,7 @@
-const chalk = require('chalk');
 const yargs = require('yargs');
-const getNotes = require('./notes');
+const notes = require('./notes');
 
 const log = console.log;
-
-// log(getNotes());
-// log(chalk.green.bold.inverse('Success!'));
 
 yargs
   .command({
@@ -24,38 +20,41 @@ yargs
       },
     },
     handler: (argv) => {
-      log(`Title: ${argv.title}`);
-      log(`Body: ${argv.body}`);
+      notes.addNote(argv.title, argv.body);
     },
   })
   .command({
     command: 'remove',
     describe: 'Removes selected note',
-    handler: () => {
-      console.log('Removing note...');
+    builder: {
+      title: {
+        describe: 'Title of note to be deleted',
+        demandOption: true,
+        type: 'string',
+      },
+    },
+    handler: (argv) => {
+      notes.removeNote(argv.title);
     },
   })
   .command({
     command: 'list',
     describe: 'Lists all notes',
     handler: () => {
-      console.log('Listing notes...');
+      notes.listNotes();
     },
   })
   .command({
     command: 'read',
     describe: 'Reads selected note',
-    handler: () => {
-      console.log('Reading note...');
+    builder: {
+      title: {
+        describe: 'Title of note to be read',
+        demandOption: true,
+        type: 'string',
+      },
+    },
+    handler: (argv) => {
+      notes.readNote(argv.title);
     },
   }).argv;
-
-// const command = process.argv[2];
-
-// if (command === 'add') {
-//   log('Adding note...');
-// } else if (command === 'remove') {
-//   log('Removing note...');
-// } else {
-//   log(chalk.yellowBright.bold('Command not supported!'));
-// }
